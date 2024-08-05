@@ -121,9 +121,6 @@ const keys = let { data: users, error } = await supabase
   .select('password')
 
   function authenticateUser() {
-    // Retrieve username and password from input fields
-    var username = document.getElementById("username").value;
-    var password = document.getElementById("password").value;
 
     // Check if username and password are in the users object
     if (username in users && users[usernames] === keys) {
