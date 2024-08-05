@@ -20,7 +20,7 @@
             background-color: #f7f7f7;
         }
         /* Container styles */
-        container {
+        .container {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -38,7 +38,7 @@
             font-size: 5rem;
             margin-bottom: 2rem;
             text-shadow: 0 2px 2px rgba(0,0,0,0.3);
-            color:white;
+            color: white;
         }
         /* Form styles */
         .login-form {
@@ -96,41 +96,57 @@
     </style>
 </head>
 <body>
-  <container>
-      <img src="happynumbers.png" height=100 width=100>
-      <h1>Please login</h1>
-      <div class="login-form">
-          <form id="loginForm">
-              <input type="text" id="username" name="username" placeholder="Username">
-              <br>
-              <input type="password" id="password" name="password" placeholder="Password">
-              <br>
-              <button type="button" onclick="authenticateUser()">Submit</button>
-          </form>
-      </div>
-  </container>
+    <div class="container">
+        <img src="happynumbers.png" height="100" width="100" alt="Happy Numbers Logo">
+        <h1>Please login</h1>
+        <div class="login-form">
+            <form id="loginForm">
+                <input type="text" id="username" name="username" placeholder="Username">
+                <br>
+                <input type="password" id="password" name="password" placeholder="Password">
+                <br>
+                <button type="button" onclick="authenticateUser()">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Make sure to add the Supabase client library in your project
+        async function authenticateUser() {
+            try {
+                // Replace these lines with your Supabase client initialization
+                const { data: users, error: usersError } = await supabase
+                    .from('users')
+                    .select('username');
+                if (usersError) throw usersError;
+
+                const { data: passwords, error: passwordsError } = await supabase
+                    .from('users')
+                    .select('username, password'); // Include password in the query
+                if (passwordsError) throw passwordsError;
+
+                const usernameInput = document.getElementById('username').value;
+                const passwordInput = document.getElementById('password').value;
+
+                const user = users.find(user => user.username === usernameInput);
+                if (user) {
+                    const password = passwords.find(pass => pass.username === usernameInput)?.password;
+                    if (password === passwordInput) {
+                        // Redirect to loggedin.html for successful login
+                        window.location.href = "loggedin.html";
+                    } else {
+                        // Invalid password
+                        alert('Invalid username or password');
+                    }
+                } else {
+                    // Invalid username
+                    alert('Invalid username or password');
+                }
+            } catch (error) {
+                console.error('Error authenticating user:', error);
+                alert('An error occurred. Please try again.');
+            }
+        }
+    </script>
 </body>
-<script>
-  
-const usernames = let { data: users, error } = await supabase
-  .from('users')
-  .select('username')
-
-const keys = let { data: users, error } = await supabase
-  .from('users')
-  .select('password')
-
-  function authenticateUser() {
-
-    // Check if username and password are in the users object
-    if (username in users && users[usernames] === keys) {
-        // Redirect to authindex.html for all users
-        window.location.href = "loggedin.html";
-
-    } else {
-        // Invalid username or password, redirect to a different page
-        alert('error')
-    }
-}
-</script>
 </html>
